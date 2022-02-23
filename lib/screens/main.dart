@@ -15,10 +15,10 @@ class _MainContainerState extends State<MainContainer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: ourCustomAppBar(context ),
+        appBar: ourCustomAppBar(context ,backButtonPressed:(){}),
         bottomNavigationBar: BottomNavigationBar(
           iconSize: 30,
-          selectedItemColor: Colors.purple,
+          selectedItemColor: Colors.grey,
           currentIndex: selected,
           onTap: (index) {
             setState(() {
@@ -53,7 +53,7 @@ class _MainContainerState extends State<MainContainer> {
  if(selected == 0){
    return HomeScreen();
  }else if(selected == 1){
-return CartScreen();
+return CartScreen(listOfProuct: [],newList: (list){},);
  }else{
    return ProfileScreen();
  }
