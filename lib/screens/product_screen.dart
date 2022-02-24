@@ -21,12 +21,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ourCustomAppBar(context,
-          title:
-              selectedItemtitle == "" ? widget.product.name : selectedItemtitle,
-          showBackButton: true,
-          backButtonPressed: (){},
-          ),
+      appBar: ourCustomAppBar(
+        context,
+        title:
+            selectedItemtitle == "" ? widget.product.name : selectedItemtitle,
+        showBackButton: true,
+        backButtonPressed: () {},
+      ),
       body: Column(children: [
         Container(
           padding: EdgeInsets.only(top: 8),
@@ -201,26 +202,19 @@ class _ProductDetailsState extends State<ProductDetails> {
                               builder: (context) => CartScreen(
                                   listOfProuct: newList,
                                   comingFromTab: false,
-                                   newList: (list) {
+                                  newList: (list) {
+                                    for (ProductItemModel mainList
+                                        in widget.listOfProduct) {
+                                      for (ProductItemModel subList
+                                          in widget.listOfProduct) {
+                                        if (mainList.name == subList.name) {
+                                          mainList.qty == subList.qty;
+                                        }
+                                      }
+                                    }
+                                    setState(() {});
 
-                           for(ProductItemModel mainList in widget.listOfProduct)
-                           {
-                             
-                           for(ProductItemModel subList in widget.listOfProduct){
-                                
-                                if(mainList.name == subList.name)
-                                {
-                                  mainList.qty == subList.qty;
-                                }
-                           }
-                           }
-                         setState(() {
-                           
-                         });
-                      
-
-                                   // widget.listOfProduct = list;
-                                   
+                                    // widget.listOfProduct = list;
                                   })),
                         );
                       },
