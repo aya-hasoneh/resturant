@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:juice/screens/login_page/login_bloc.dart';
 
 
-import 'create_new_account_screen.dart';
+import '../create_new_accoun_page/create_new_account_screen.dart';
 
-import 'forgot_screen.dart';
-import 'main.dart';
+import '../forgot_password_page/forgot_screen.dart';
+import '../main.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -12,14 +13,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  String errorMsg = " ";
+ var myBloc =LoginBloc();
 
   @override
     void initState() {
-      userNameController.text="aya";
-      passwordController.text="123";
+     myBloc. userNameController.text="aya";
+     myBloc. passwordController.text="123";
       
       super.initState();
     }
@@ -49,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 102, left: 28, right: 28),
               child: TextField(
-                controller: userNameController,
+                controller: myBloc. userNameController,
                 keyboardType: TextInputType.name,
                 style: TextStyle(
                   color: Colors.black,
@@ -72,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 33.5, left: 28, right: 28),
               child: TextField(
-                controller: passwordController,
+                controller:myBloc. passwordController,
                 obscureText: true,
                 obscuringCharacter: '•',
                 keyboardType: TextInputType.number,
@@ -102,8 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 40,
               child: RaisedButton(
                 onPressed: () {
-                validateLoginFeild();
-                
+               myBloc.validateLoginFeild( 
+                       context
+                       );
+                setState(() {});
                 },
                 child: Text(
                   "Login",
@@ -118,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Text(
-              errorMsg,
+            myBloc.  errorMsg,
               style: TextStyle(color: Colors.red),
             ),
             Row(
@@ -212,24 +213,5 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  validateLoginFeild() {
-    if (userNameController.text.isEmpty) {
-      errorMsg = "User Name Is Empty";
-    } else if (userNameController.text != "aya") {
-      errorMsg = "User Name Is Not Correct";
-    } else if (passwordController.text.isEmpty) {
-      errorMsg = "Password Is Empty";
-    } else if (passwordController.text != "123") {
-      errorMsg = "Password Is Not Correct";
-    } else {
-      errorMsg = " ";
-        Navigator.push(
-                        context,
-                       MaterialPageRoute(
-                builder: (context) => MainContainer()),
-                       );
-    }
-
-    setState(() {});
-  }
+ 
 }

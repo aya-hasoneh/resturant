@@ -11,5 +11,5 @@ class ProductItemModel {
  List <Color> color;
  int qty=0;
  double rate =0.0;
-  ProductItemModel({  this.name,  this.price,  this.color, this.imageNumber,});
+  ProductItemModel({ @required this.name, @required this.price, @required this.color,@required this.imageNumber,});
 }

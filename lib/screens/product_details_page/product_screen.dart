@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:juice/moudles/productItem.dart';
-import 'package:juice/screens/cart_screen.dart';
+import 'package:juice/screens/cart_page/cart_screen.dart';
+import 'package:juice/screens/product_details_page/product_bloc.dart';
 import 'package:juice/shared_widget/custom_appbar.dart';
+import 'package:juice/utls/singleton.dart';
 
 class ProductDetails extends StatefulWidget {
   // String pageTitle;
   //int itemCount;
-  List<ProductItemModel> listOfProduct;
+  //List<ProductItemModel> listOfProduct;
   ProductItemModel product;
   int selectedIndex;
-  ProductDetails(this.listOfProduct, this.product, this.selectedIndex);
+  ProductDetails(this.product, this.selectedIndex);
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
-  var selectedItemtitle = " ";
+  var myBloc = ProductBloc();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ourCustomAppBar(
         context,
-        title:
-            selectedItemtitle == "" ? widget.product.name : selectedItemtitle,
+        title: myBloc.selectedItemtitle == ""
+            ? widget.product.name
+            : myBloc.selectedItemtitle,
         showBackButton: true,
         backButtonPressed: () {},
       ),
@@ -34,9 +37,10 @@ class _ProductDetailsState extends State<ProductDetails> {
           height: 700,
           width: MediaQuery.of(context).size.width,
           child: PageView.builder(
-            itemCount: widget.listOfProduct.length,
+            itemCount: Singleton.prefrence.productList.length,
             onPageChanged: (index) {
-              selectedItemtitle = widget.listOfProduct[index].name;
+              myBloc.selectedItemtitle =
+                  Singleton.prefrence.productList[index].name;
               setState(() {});
             },
             controller: PageController(
@@ -50,13 +54,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         gradient: LinearGradient(
-                            colors: widget.listOfProduct[index].color)),
+                            colors:
+                                Singleton.prefrence.productList[index].color)),
                     child: Column(children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 53),
                         child: Image.asset(
                           "assets/images/productimage" +
-                              widget.listOfProduct[index].imageNumber +
+                              Singleton
+                                  .prefrence.productList[index].imageNumber +
                               ".png",
                           scale: 0.4,
                         ),
@@ -65,7 +71,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         height: 18,
                       ),
                       Text(
-                        widget.listOfProduct[index].name,
+                        Singleton.prefrence.productList[index].name,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -84,7 +90,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           Text(
                             "200ml, 1x ₹" +
-                                widget.listOfProduct[index].price.toString(),
+                                Singleton.prefrence.productList[index].price
+                                    .toString(),
                             style: TextStyle(color: Colors.white, fontSize: 15),
                           ),
                         ],
@@ -105,10 +112,13 @@ class _ProductDetailsState extends State<ProductDetails> {
                             child: Row(children: [
                               IconButton(
                                   onPressed: () {
-                                    if (widget.listOfProduct[index].qty < 1) {
+                                    if (Singleton
+                                            .prefrence.productList[index].qty <
+                                        1) {
                                       return;
                                     } else {
-                                      widget.listOfProduct[index].qty--;
+                                      Singleton
+                                          .prefrence.productList[index].qty--;
                                     }
                                     setState(() {});
                                   },
@@ -118,13 +128,15 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     size: 25,
                                   )),
                               Text(
-                                widget.listOfProduct[index].qty.toString(),
+                                Singleton.prefrence.productList[index].qty
+                                    .toString(),
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 20),
                               ),
                               IconButton(
                                   onPressed: () {
-                                    widget.listOfProduct[index].qty++;
+                                    Singleton
+                                        .prefrence.productList[index].qty++;
                                     setState(() {});
                                   },
                                   icon: Icon(
@@ -136,8 +148,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                           ),
                           Text(
                             "\$" +
-                                (widget.listOfProduct[index].price *
-                                        widget.listOfProduct[index].qty)
+                                (Singleton.prefrence.productList[index].price *
+                                        Singleton
+                                            .prefrence.productList[index].qty)
                                     .toStringAsFixed(2),
                             style: TextStyle(color: Colors.white, fontSize: 23),
                           ),
@@ -150,7 +163,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     child: Column(
                       children: [
                         RatingBar.builder(
-                          initialRating: widget.listOfProduct[index].rate,
+                          initialRating:
+                              Singleton.prefrence.productList[index].rate,
                           minRating: 1,
                           direction: Axis.horizontal,
                           // allowHalfRating: true,
@@ -161,7 +175,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                             color: Colors.amber,
                           ),
                           onRatingUpdate: (rating) {
-                            widget.listOfProduct[index].rate = rating;
+                            Singleton.prefrence.productList[index].rate =
+                                rating;
                             setState(() {});
                             print(rating);
                           },
@@ -170,7 +185,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                           height: 6,
                         ),
                         Text("You have saved  " +
-                            widget.listOfProduct[index].rate.toString()),
+                            Singleton.prefrence.productList[index].rate
+                                .toString()),
                       ],
                     ),
                   ),
@@ -183,39 +199,54 @@ class _ProductDetailsState extends State<ProductDetails> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         gradient: LinearGradient(
-                            colors: widget.listOfProduct[index].color)),
+                            colors:
+                                Singleton.prefrence.productList[index].color)),
                     child: TextButton(
                       child: Text(
                         "Add To Cart",
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () {
-                        List<ProductItemModel> newList = [];
-                        for (ProductItemModel model in widget.listOfProduct) {
-                          if (model.qty > 0) {
-                            newList.add(model);
-                          }
-                        }
+                        // List<ProductItemModel> newList = [];
+                        // for (ProductItemModel model in Singleton.prefrence.productList ) {
+                        //   if (model.qty > 0) {
+                        //     newList.add(model);
+                        //   }
+                        // }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => CartScreen(
-                                  listOfProuct: newList,
-                                  comingFromTab: false,
-                                  newList: (list) {
-                                    for (ProductItemModel mainList
-                                        in widget.listOfProduct) {
-                                      for (ProductItemModel subList
-                                          in widget.listOfProduct) {
-                                        if (mainList.name == subList.name) {
-                                          mainList.qty == subList.qty;
+                                    refresh: () {
+                                      for (ProductItemModel mainList
+                                          in Singleton.prefrence.productList) {
+                                        for (ProductItemModel subList
+                                            in Singleton
+                                                .prefrence.productList) {
+                                          if (mainList.name == subList.name) {
+                                            mainList.qty == subList.qty;
+                                          }
                                         }
                                       }
-                                    }
-                                    setState(() {});
+                                      setState(() {});
+                                    },
+                                    //  listOfProuct: newList,
+                                    comingFromTab: false,
+                                    // newList: (list) {
+                                    //  for (ProductItemModel mainList
+                                    //     in Singleton.prefrence.productList) {
+                                    //   for (ProductItemModel subList
+                                    //        in Singleton.prefrence.productList) {
+                                    //      if (mainList.name == subList.name) {
+                                    //        mainList.qty == subList.qty;
+                                    //     }
+                                    //   }
+                                    // }
+                                    // setState(() {});
 
-                                    // widget.listOfProduct = list;
-                                  })),
+                                    //   // widget.listOfProduct = list;
+                                    // }
+                                  )),
                         );
                       },
                     ),

@@ -1,18 +1,39 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:juice/screens/home_page/home_screen.dart';
+import 'package:juice/screens/payment_page/payment_bloc.dart';
 import 'package:juice/shared_widget/custom_appbar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../moudles/productItem.dart';
 
-class PaymentPage extends StatelessWidget {
-  var pageController = PageController(initialPage: 1, viewportFraction: 0.8);
+
+class PaymentPage extends StatefulWidget {
+ VoidCallback grandTotal;
+ PaymentPage({@required this.grandTotal});
+
+  @override
+  State<PaymentPage> createState() => _PaymentPageState();
+}
+
+class _PaymentPageState extends State<PaymentPage> {
+
+  var myBloc =PaymentBloc();
+  
+  @override
+  void initState() {
+    
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: ourCustomAppBar(
         context,
         showBackButton: true,
+        backButtonPressed: (){},
         title: "Payment",
       ),
       body: Column(
@@ -24,7 +45,7 @@ class PaymentPage extends StatelessWidget {
             child: Container(
               height: 190,
               child: PageView.builder(
-                  controller: pageController,
+                  controller:myBloc. pageController,
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     return cardView(index);
@@ -32,7 +53,7 @@ class PaymentPage extends StatelessWidget {
             ),
           ),
           SmoothPageIndicator(
-            controller: pageController,
+            controller: myBloc.pageController,
             count: 3,
             effect: JumpingDotEffect(
               dotHeight: 16,
@@ -136,11 +157,11 @@ class PaymentPage extends StatelessWidget {
                                     color: Colors.white, fontSize: 11),
                               ),
                               Text(
-                                "150",
+                         "35.00",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 25),
+                                    fontSize: 20),
                               )
                             ],
                           )),

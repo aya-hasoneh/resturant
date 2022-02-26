@@ -1,0 +1,3 @@
+class ProductBloc {
+ var selectedItemtitle = " ";
+}

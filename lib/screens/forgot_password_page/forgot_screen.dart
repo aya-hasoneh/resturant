@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:juice/screens/forgot_password_page/forgot_password_bloc.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -6,10 +7,10 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  TextEditingController emailPhoneController = TextEditingController();
+  var myBloc = ForgotBloc();
   @override
   void initState() {
-    emailPhoneController.addListener(() {
+  myBloc.emailPhoneController.addListener(() {
       setState(() {});
     });
     super.initState();
@@ -36,7 +37,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 padding: const EdgeInsets.only(
                     top: 102, left: 28, right: 28, bottom: 50.5),
                 child: TextField(
-                  controller: emailPhoneController,
+                  controller: myBloc.emailPhoneController,
                   keyboardType: TextInputType.emailAddress,
                   style: TextStyle(
                     color: Colors.black,
@@ -57,13 +58,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ), //0xffF46186
               ElevatedButton(
-                  onPressed: validateForgotPasswordFeild() 
-                  ? () {} 
+                  onPressed: myBloc.validateForgotPasswordFeild() 
+                  ? () {setState(() {});} 
                   : null,
                   child: Text("Submit"),
+                  
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Color(0xffF46186)),
-                  )),
+                  )
+                   
+                  ),
 
                    ElevatedButton(
                   onPressed: 
@@ -81,12 +85,5 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  bool validateForgotPasswordFeild() {
-    if (emailPhoneController.text.isEmpty) {
-      return false;
-    } else {
-      setState(() {});
-      return true;
-    }
-  }
+ 
 }

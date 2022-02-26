@@ -1,38 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:juice/screens/payment_screen.dart';
+import 'package:juice/screens/cart_page/cart_bloc.dart';
+import 'package:juice/screens/payment_page/payment_screen.dart';
 import 'package:juice/shared_widget/custom_appbar.dart';
+import 'package:juice/utls/singleton.dart';
 
-import '../moudles/productItem.dart';
+import '../../moudles/productItem.dart';
 
 class CartScreen extends StatefulWidget {
-  final List<ProductItemModel> listOfProuct;
-  final Function( List<ProductItemModel>) newList;
-   bool comingFromTab;
-   CartScreen({this.listOfProuct,this.newList,this.comingFromTab = true});
+  //final Function(List<ProductItemModel>) newList;
+
+  VoidCallback refresh;
+  bool comingFromTab;
+  CartScreen(
+      {@required this.refresh,
+      // this.newList,
+      this.comingFromTab = true});
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  
+  var myBloc = CartBloc();
   
   @override
+  void initState() {
+    
+    
+       for(ProductItemModel item in Singleton.prefrence.productList){
+         if(item.qty > 0){
+     myBloc. filterList.add(item);
+   }
+     }
+     super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
-      appBar:widget.comingFromTab ? null : ourCustomAppBar(context, title: "My Cart", showBackButton: true,backButtonPressed:(){
-        widget.newList(widget.listOfProuct);
-      }),
+      appBar: widget.comingFromTab
+          ? null
+          : ourCustomAppBar(context, title: "My Cart", showBackButton: true,
+              backButtonPressed: () {
+              widget.refresh();
+              // widget.newList(Singleton.prefrence.productList);
+            }),
       body: Column(children: [
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Container(
               child: ListView.builder(
-                  itemCount: widget.listOfProuct.length,
+                  itemCount: myBloc.filterList.length,
                   itemBuilder: (context, index) {
-                    return productTile(widget.listOfProuct[index], index);
+                    return productTile(myBloc.filterList[index], index);
                   }),
             ),
           ),
@@ -62,7 +83,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     SizedBox(width: 250),
                     Text(
-                     "₹"+getBillTotal(),
+                      "₹" + getBillTotal(),
                       style: TextStyle(color: Color(0xff585858), fontSize: 18),
                     ),
                   ],
@@ -97,7 +118,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     SizedBox(width: 200),
                     Text(
-                      "₹"+grandTotal(getBillTotal()),
+                      "₹" + grandTotal(getBillTotal()),
                       style: TextStyle(
                           color: Color(0xff585858),
                           fontSize: 18,
@@ -123,7 +144,12 @@ class _CartScreenState extends State<CartScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PaymentPage()),
+                        MaterialPageRoute(
+                            builder: (context) => PaymentPage(
+                                  grandTotal: () {
+                                    setState(() {});
+                                  },
+                                )),
                       );
                     },
                   ),
@@ -195,7 +221,8 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    widget.listOfProuct.removeAt(index);
+                    Singleton.prefrence.productList[index].qty = 0;
+                    Singleton.prefrence.productList.removeAt(index);
                     setState(() {});
                   },
                   icon: Icon(
@@ -218,7 +245,8 @@ class _CartScreenState extends State<CartScreen> {
                   IconButton(
                       onPressed: () {
                         if (model.qty == 1) {
-                          widget.listOfProuct.removeAt(index);
+                          Singleton.prefrence.productList[index].qty = 0;
+                          Singleton.prefrence.productList.removeAt(index);
                         } else {
                           model.qty--;
                         }
@@ -258,16 +286,17 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
-  String getBillTotal(){
-    double total =0;
-    for(ProductItemModel model in widget.listOfProuct){
-      total = total +(model.qty*model.price);
+
+  String getBillTotal() {
+    double total = 0;
+    for (ProductItemModel model in Singleton.prefrence.productList) {
+      total = total + (model.qty * model.price);
     }
     return total.toStringAsFixed(2);
   }
-  String grandTotal(String total){
-    var doubleTolta = double.parse(total);
-    return (doubleTolta * 70 / 100 ).toStringAsFixed(2);
 
+  String grandTotal(String total) {
+    var doubleToltl = double.parse(total);
+    return (doubleToltl * 70 / 100).toStringAsFixed(2);
   }
 }

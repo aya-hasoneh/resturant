@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:juice/screens/create_new_accoun_page/create_new_account_bloc.dart';
 
-import 'login_screen.dart';
+import '../login_page/login_screen.dart';
+
+
 
 
 
@@ -10,12 +13,9 @@ class CrateAccountScreen extends StatefulWidget {
 }
 
 class _CrateAccountScreenState extends State<CrateAccountScreen> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController mobileController = TextEditingController();
-  TextEditingController createPasswordController = TextEditingController();
+  var myBloc = NewAccountBloc();
 
-  String errorMsg = "";
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -59,7 +59,7 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                   padding:
                       const EdgeInsets.only(top: 79.5, left: 28.5, right: 27),
                   child: TextField(
-                    controller: nameController,
+                    controller: myBloc. nameController,
                     keyboardType: TextInputType.name,
                     style: TextStyle(
                         color: Colors.black,
@@ -81,7 +81,7 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                   padding:
                       const EdgeInsets.only(top: 33.5, left: 28.5, right: 27),
                   child: TextField(
-                    controller: emailController,
+                    controller:myBloc. emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(
                         color: Colors.black,
@@ -104,7 +104,7 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                   padding:
                       const EdgeInsets.only(top: 33.5, left: 28.5, right: 27),
                   child: TextField(
-                    controller: mobileController,
+                    controller: myBloc.mobileController,
                     keyboardType: TextInputType.phone,
                     style: TextStyle(
                         color: Colors.black,
@@ -127,7 +127,7 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                   padding:
                       const EdgeInsets.only(top: 33.5, left: 28.5, right: 27),
                   child: TextField(
-                    controller: createPasswordController,
+                    controller:myBloc. createPasswordController,
                     keyboardType: TextInputType.number,
                     style: TextStyle(
                         color: Colors.black,
@@ -150,7 +150,8 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                   padding: const EdgeInsets.only(top: 39.5),
                   child: ElevatedButton(
                       onPressed: () {
-                        validateTextFeild() ;
+                        myBloc.validateTextFeild() ;
+                        setState(() {});
                         // validateTextFeild();
                         // Navigator.push(
                         //   context,
@@ -167,7 +168,7 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
                       )),
                 ),
                 Text(
-                  errorMsg,
+                  myBloc.errorMsg,
                   style: TextStyle(color: Colors.red),
                 ),
                 Padding(
@@ -244,18 +245,5 @@ class _CrateAccountScreenState extends State<CrateAccountScreen> {
     );
   }
 
-  validateTextFeild() {
-    if (nameController.text.isEmpty) {
-      errorMsg = "Name Is Empty ";
-    } else if (emailController.text.isEmpty) {
-      errorMsg = "Email Is Empty ";
-    } else if (mobileController.text.isEmpty) {
-      errorMsg = "Mobile Is Empty ";
-    } else if (createPasswordController.text.isEmpty) {
-      errorMsg = "Password Is Empty ";
-    } else {
-      errorMsg = "";
-    }
-    setState(() {});
-  }
+ 
 }

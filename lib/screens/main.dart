@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:juice/shared_widget/custom_appbar.dart';
 
-import 'cart_screen.dart';
-import 'home_screen.dart';
+import 'cart_page/cart_screen.dart';
+import 'home_page/home_screen.dart';
 import 'profile_screen.dart';
 
 class MainContainer extends StatefulWidget {
@@ -53,7 +53,10 @@ class _MainContainerState extends State<MainContainer> {
  if(selected == 0){
    return HomeScreen();
  }else if(selected == 1){
-return CartScreen(listOfProuct: [],newList: (list){},);
+return CartScreen(
+  refresh: (){},
+  //newList: (list){},
+  );
  }else{
    return ProfileScreen();
  }
